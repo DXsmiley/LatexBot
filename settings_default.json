@@ -1,0 +1,16 @@
+{
+	"mode": "reply",
+	"login": {
+		"email": "user@domain.com",
+		"password": "pa$$w0rd"
+	},
+	"channels": {
+		"whitelist": [],
+		"blacklist": []
+	},
+	"commands": {
+		"render": ["!tex "],
+		"help": ["!help", "!help tex"]
+	},
+	"renderer": "external"
+}

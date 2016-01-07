@@ -1,0 +1,11 @@
+# Settings File
+settings.json
+
+# files used in image generation
+*.tex
+*.dvi
+*.log
+*.png
+
+# Python
+__pycache__
