@@ -12,5 +12,6 @@
 		"render": ["!tex "],
 		"help": ["!help", "!help tex"]
 	},
-	"renderer": "external"
+	"renderer": "external",
+	"verbose": true
 }

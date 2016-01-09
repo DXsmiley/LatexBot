@@ -45,6 +45,10 @@ if not os.path.isfile('settings.json'):
 
 else:
 
+	def vprint(*args, **kwargs):
+		if settings.get('verbose', False):
+			print(*args, **kwargs)
+
 	settings = json.loads(open('settings.json').read())
 
 	chanrestrict.setup(settings['channels']['whitelist'],
@@ -87,7 +91,7 @@ else:
 			if msg.startswith(c) and (str(message.author) == client.user.name or settings['mode'] == 'reply'):
 				
 				latex = msg[len(c):].strip()
-				print('Latex:', latex)
+				vprint('Latex:', latex)
 
 				if settings['renderer'] == 'external':
 					fn = generate_image_online(latex)
@@ -97,29 +101,29 @@ else:
 				if settings['mode'] == 'reply':
 					if os.path.getsize(fn) > 0:
 						client.send_file(message.channel, fn)
-						print('Success!')
+						vprint('Success!')
 					else:
 						client.send_message(message.channel, 'Something broke. :frowning:')
-						print('Failure.')
+						vprint('Failure.')
 
 				if settings['mode'] == 'edit':
 					if os.path.getsize(fn) > 0:
 						client.delete_message(message)
 						client.send_file(message.channel, fn)
-						print('Success!')
+						vprint('Success!')
 					else:
 						client.send_message(message.channel, 'LaTeX failed. :frowning:')
-						print('Failure.')
+						vprint('Failure.')
 
 				break
 
 		if msg in settings['commands']['help']:
-			print('Showing help')
+			vprint('Showing help')
 			client.send_message(message.author, HELP_MESSAGE)
 
 	@client.event
 	def on_ready():
-		print('LaTeX Math Bot!')
-		print('Running as', client.user.name)
+		vprint('LaTeX Math Bot!')
+		vprint('Running as', client.user.name)
 
 	client.run()
