@@ -16,14 +16,6 @@ Running the bot for the first time will produce the `settings.json` file. You sh
 
 ## Settings
 
-### Mode
-
-This can be either `reply` or `edit`.
-
-In `reply` mode, the bot will reply to all `!tex` messages with rendered latex. Messages are posted in the same channel that the latex code was.
-
-`edit` mode is incomplete.
-
 ### Login
 
 The email and password used to login to the account. It is recommended that you create a separate account for running bots.

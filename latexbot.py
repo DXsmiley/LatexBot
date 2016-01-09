@@ -88,7 +88,7 @@ else:
 		
 		for c in settings['commands']['render']:
 
-			if msg.startswith(c) and (str(message.author) == client.user.name or settings['mode'] == 'reply'):
+			if msg.startswith(c):
 				
 				latex = msg[len(c):].strip()
 				vprint('Latex:', latex)
@@ -98,22 +98,12 @@ else:
 				if settings['renderer'] == 'local':
 					fn = generate_image(latex)
 
-				if settings['mode'] == 'reply':
-					if os.path.getsize(fn) > 0:
-						client.send_file(message.channel, fn)
-						vprint('Success!')
-					else:
-						client.send_message(message.channel, 'Something broke. :frowning:')
-						vprint('Failure.')
-
-				if settings['mode'] == 'edit':
-					if os.path.getsize(fn) > 0:
-						client.delete_message(message)
-						client.send_file(message.channel, fn)
-						vprint('Success!')
-					else:
-						client.send_message(message.channel, 'LaTeX failed. :frowning:')
-						vprint('Failure.')
+				if os.path.getsize(fn) > 0:
+					client.send_file(message.channel, fn)
+					vprint('Success!')
+				else:
+					client.send_message(message.channel, 'Something broke. :frowning:')
+					vprint('Failure.')
 
 				break
 
