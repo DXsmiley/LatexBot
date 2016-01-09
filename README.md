@@ -32,11 +32,11 @@ The email and password used to login to the account. It is recommended that you 
 
 The list of servers and channels that the bot may access. The rules are as follows:
 	
-	1. If the whitelist is empty, the bot may access all channels on all servers.
-	2. If the whitelist is not empty, the bot may access only the *servers* on the whitelist.
-	3. The bot may not access any *server* on the blacklist.
-	4. The bot may access any *channel* on the whitelist.
-	5. The bot may not access any *channel* on the blacklist.
+1. If the whitelist is empty, the bot may access all channels on all servers.
+2. If the whitelist is not empty, the bot may access only the *servers* on the whitelist.
+3. The bot may not access any *server* on the blacklist.
+4. The bot may access any *channel* on the whitelist.
+5. The bot may not access any *channel* on the blacklist.
 
 Rules with larger numbers overrule the smaller ones.
 
