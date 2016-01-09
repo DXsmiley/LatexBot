@@ -11,8 +11,6 @@ Hello! I'm the *LaTeX* math bot!
 
 You can type mathematical *LaTeX* into the chat and I'll automatically render it!
 
-Be aware that using `\begin{align}` will break me, so please don't use it.
-
 Simply use the `!tex` command.
 
 **Examples**
@@ -22,6 +20,11 @@ Simply use the `!tex` command.
 `!tex \sqrt{a^2 + b^2} = c`
 
 `!tex \int_0^{2\pi} \sin{(4\theta)} \mathrm{d}\theta`
+
+**Notes**
+
+Using the \begin or \end commands will probably result in something failing.
+
 """
 
 LATEX_FRAMEWORK = r"""
@@ -76,11 +79,6 @@ else:
 	@client.event
 	@chanrestrict.apply
 	def on_message(message):
-		# print('Author:', message.author)
-		# print('Content:', message.content)
-		# print('Channel:', message.channel.name)
-		# print('Server:', message.server.name)
-		# print()
 
 		msg = message.content
 		
@@ -116,22 +114,12 @@ else:
 				break
 
 		if msg in settings['commands']['help']:
+			print('Showing help')
 			client.send_message(message.author, HELP_MESSAGE)
 
 	@client.event
 	def on_ready():
 		print('LaTeX Math Bot!')
 		print('Running as', client.user.name)
-
-		# print(client.user.name, '|', client.user.id, '\n')
-		# for i in client.servers:
-		# 	print('===', i.name, '===')
-		# 	print('  Channels')
-		# 	for j in i.channels:
-		# 		print('   ', j.type, ':', j.name)
-		# 	print('  Members')
-		# 	for j in i.members:
-		# 		print('   ', j.name)
-		# print()
 
 	client.run()
