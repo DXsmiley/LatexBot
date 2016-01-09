@@ -23,7 +23,7 @@ Simply use the `!tex` command.
 
 **Notes**
 
-Using the \begin or \end commands will probably result in something failing.
+Using the `\begin` or `\end` in the *LaTeX* will probably result in something failing.
 
 """
 
