@@ -5,6 +5,7 @@ import os
 import chanrestrict
 import json
 import shutil
+import asyncio
 
 HELP_MESSAGE = r"""
 Hello! I'm the *LaTeX* math bot!
@@ -55,7 +56,6 @@ else:
 					   settings['channels']['blacklist'])
 
 	client = discord.Client()
-	client.login(settings['login']['email'], settings['login']['password'])
 
 	# Generate LaTeX locally. Is there such things as rogue LaTeX code?
 	def generate_image(latex):
@@ -81,6 +81,7 @@ else:
 		return fn
 
 	@client.event
+	# @asyncio.coroutine
 	@chanrestrict.apply
 	def on_message(message):
 
@@ -112,8 +113,10 @@ else:
 			client.send_message(message.author, HELP_MESSAGE)
 
 	@client.event
+	# @asyncio.coroutine
 	def on_ready():
 		vprint('LaTeX Math Bot!')
 		vprint('Running as', client.user.name)
 
+	client.login(settings['login']['email'], settings['login']['password'])
 	client.run()
