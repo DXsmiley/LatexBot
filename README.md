@@ -37,4 +37,4 @@ Rules with larger numbers overrule the smaller ones.
 `remote` will use an external server to render the LaTeX. **I do not own or maintain this server.**
 Consider finding a different server. If too many people abuse it, it will be shut down.
 
-`local` will attempt to use the programs `latex` and `dvipdf` to render the LaTeX locally.
+`local` will attempt to use the programs `latex` and `dvipng` to render the LaTeX locally.
