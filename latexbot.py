@@ -54,7 +54,7 @@ class LatexBot(discord.Client):
 		#Check if user is using a token or login
 		if self.settings['login_method'] == 'token':
 			self.run(self.settings['login']['token'])
-		elif self.settings['login_method'] == 'login':
+		elif self.settings['login_method'] == 'account':
 			self.login(settings['login']['email'], settings['login']['password'])
 			self.run()
 		else:
