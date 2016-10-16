@@ -37,10 +37,3 @@ def check(message):
 		if chn in black:
 			allow = False
 	return allow
-
-# This only works for the on_message function.
-def apply(func):
-	def on_message(message):
-		if check(message):
-			func(message)
-	return on_message

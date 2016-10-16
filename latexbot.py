@@ -1,11 +1,13 @@
 import discord
-import urllib
+import urllib.request
 import random
 import os
-import chanrestrict
 import json
 import shutil
 import asyncio
+import sys
+
+import chanrestrict
 
 HELP_MESSAGE = r"""
 Hello! I'm the *LaTeX* math bot!
@@ -38,85 +40,98 @@ __DATA__
 \end{document}
 """
 
-if not os.path.isfile('settings.json'):
+class LatexBot(discord.Client):
+	#TODO: Check for bad token or login credentials using try catch
+	def __init__(self):
+		super().__init__()
 
-	shutil.copyfile('settings_default.json', 'settings.json')
-	print('Now you can go and edit `settings.json`.')
-	print('See README.md for more information on these settings.')
+		self.checkForConfig()
+		self.settings = json.loads(open('settings.json').read())
 
-else:
+		chanrestrict.setup(self.settings['channels']['whitelist'],
+					       self.settings['channels']['blacklist'])
 
-	def vprint(*args, **kwargs):
-		if settings.get('verbose', False):
+		#Check if user is using a token or login
+		if self.settings['login_method'] == 'token':
+			self.run(self.settings['login']['token'])
+		elif self.settings['login_method'] == 'login':
+			self.login(settings['login']['email'], settings['login']['password'])
+			self.run()
+		else:
+			raise Exception('Bad config: "login_method" should set to "login" or "token"')
+
+	#Check that config exists
+	def checkForConfig(self):
+		if not os.path.isfile('settings.json'):
+			shutil.copyfile('settings_default.json', 'settings.json')
+			print('Now you can go and edit `settings.json`.')
+			print('See README.md for more information on these settings.')
+
+
+	def vprint(self, *args, **kwargs):
+		if self.settings.get('verbose', False):
 			print(*args, **kwargs)
 
-	settings = json.loads(open('settings.json').read())
+	#Outputs bot info to user
+	@asyncio.coroutine
+	def on_ready(self):
+		print('------')
+		print('Logged in as')
+		print(self.user.name)
+		print(self.user.id)
+		print('------')
 
-	chanrestrict.setup(settings['channels']['whitelist'],
-					   settings['channels']['blacklist'])
+	async def on_message(self, message):
+		if chanrestrict.check(message):
 
-	client = discord.Client()
+			msg = message.content
+			
+			for c in self.settings['commands']['render']:
+				if msg.startswith(c):				
+					latex = msg[len(c):].strip()
+					self.vprint('Latex:', latex)
+
+					if self.settings['renderer'] == 'external':
+						fn = self.generate_image_online(latex)
+					if self.settings['renderer'] == 'local':
+						# fn = self.generate_image(latex)
+						raise Exception('TODO: Renable local generation')
+
+					if os.path.getsize(fn) > 0:
+						await self.send_file(message.channel, fn)
+						self.vprint('Success!')
+					else:
+						await self.send_message(message.channel, 'Something broke. Check the syntax of your message. :frowning:')
+						self.vprint('Failure.')
+
+					break
+
+			if msg in self.settings['commands']['help']:
+				self.vprint('Showing help')
+				await self.send_message(message.author, HELP_MESSAGE)
 
 	# Generate LaTeX locally. Is there such things as rogue LaTeX code?
-	def generate_image(latex):
-		num = str(random.randint(0, 2 ** 31))
-		latex_file = num + '.tex'
-		dvi_file = num + '.dvi'
-		with open(latex_file, 'w') as tex:
-			latex = LATEX_FRAMEWORK.replace('__DATA__', latex)
-			tex.write(latex)
-			tex.flush()
-			tex.close()
-		os.system('latex -quiet ' + latex_file)
-		os.system('dvipng -q* -D 300 -T tight ' + dvi_file)
-		png_file = num + '1.png'
-		return png_file
+	# def generate_image(self, latex):
+	# 	num = str(random.randint(0, 2 ** 31))
+	# 	latex_file = num + '.tex'
+	# 	dvi_file = num + '.dvi'
+	# 	with open(latex_file, 'w') as tex:
+	# 		latex = LATEX_FRAMEWORK.replace('__DATA__', latex)
+	# 		tex.write(latex)
+	# 		tex.flush()
+	# 		tex.close()
+	# 	os.system('latex -quiet ' + latex_file)
+	# 	os.system('dvipng -q* -D 300 -T tight ' + dvi_file)
+	# 	png_file = num + '1.png'
+	# 	return png_file
 
 	# More unpredictable, but probably safer for my computer.
-	def generate_image_online(latex):
+	def generate_image_online(self, latex):
 		url = 'http://frog.isima.fr/cgi-bin/bruno/tex2png--10.cgi?'
 		url += urllib.parse.quote(latex, safe='')
 		fn = str(random.randint(0, 2 ** 31)) + '.png'
 		urllib.request.urlretrieve(url, fn)
-		return fn
+		return fn 
 
-	@client.event
-	# @asyncio.coroutine
-	@chanrestrict.apply
-	def on_message(message):
-
-		msg = message.content
-		
-		for c in settings['commands']['render']:
-
-			if msg.startswith(c):
-				
-				latex = msg[len(c):].strip()
-				vprint('Latex:', latex)
-
-				if settings['renderer'] == 'external':
-					fn = generate_image_online(latex)
-				if settings['renderer'] == 'local':
-					fn = generate_image(latex)
-
-				if os.path.getsize(fn) > 0:
-					client.send_file(message.channel, fn)
-					vprint('Success!')
-				else:
-					client.send_message(message.channel, 'Something broke. :frowning:')
-					vprint('Failure.')
-
-				break
-
-		if msg in settings['commands']['help']:
-			vprint('Showing help')
-			client.send_message(message.author, HELP_MESSAGE)
-
-	@client.event
-	# @asyncio.coroutine
-	def on_ready():
-		vprint('LaTeX Math Bot!')
-		vprint('Running as', client.user.name)
-
-	client.login(settings['login']['email'], settings['login']['password'])
-	client.run()
+if __name__ == "__main__":
+	LatexBot()
