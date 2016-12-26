@@ -10,15 +10,18 @@ Example: `!tex \sqrt{a^2 + b^2} = c`
 
 ## Running
 
-To run the bot, you need [Python](https://www.python.org/) and [discord.py](https://github.com/Rapptz/discord.py).
+To run the bot, you need [Python3](https://www.python.org/) and [discord.py](https://github.com/Rapptz/discord.py).
 
-Running the bot for the first time will produce the `settings.json` file. You should edit this, then run the bot again.
+Running the bot for the first time will produce the `settings.json` file. You should edit this.
 
 ## Settings
 
 ### Login
+You need either an email and passsword to login or a bot token. You can read more about that [here](https://discordapp.com/developers/docs/topics/oauth2#bot-vs-user-accounts)
 
-The email and password used to login to the account. It is recommended that you create a separate account for running bots.
+If you're using an email and password, under "login_method", change "token" to "account"
+
+Under "login", if you're using the account login method, change "email" and "password" to their respective value . If you're using a bot token, set "token" to be the token that discord auto generated for you.
 
 ### Channels
 

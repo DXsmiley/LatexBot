@@ -1,7 +1,12 @@
 {
+	"login_method": "token",
+	"renderer": "external",
+	"verbose": true,
+
 	"login": {
 		"email": "user@domain.com",
-		"password": "pa$$w0rd"
+		"password": "pa$$w0rd",
+		"token": "your token here"
 	},
 	"channels": {
 		"whitelist": [],
@@ -10,7 +15,5 @@
 	"commands": {
 		"render": ["!tex "],
 		"help": ["!help", "!help tex"]
-	},
-	"renderer": "external",
-	"verbose": true
+	}
 }
