@@ -85,17 +85,17 @@ class LatexBot(discord.Client):
 		if chanrestrict.check(message):
 
 			msg = message.content
-			
+
 			for c in self.settings['commands']['render']:
-				if msg.startswith(c):				
+				if msg.startswith(c):
 					latex = msg[len(c):].strip()
 					self.vprint('Latex:', latex)
 
 					if self.settings['renderer'] == 'external':
 						fn = self.generate_image_online(latex)
 					if self.settings['renderer'] == 'local':
-						# fn = self.generate_image(latex)
-						raise Exception('TODO: Renable local generation')
+						fn = self.generate_image(latex)
+						# raise Exception('TODO: Renable local generation')
 
 					if os.path.getsize(fn) > 0:
 						await self.send_file(message.channel, fn)
@@ -111,19 +111,19 @@ class LatexBot(discord.Client):
 				await self.send_message(message.author, HELP_MESSAGE)
 
 	# Generate LaTeX locally. Is there such things as rogue LaTeX code?
-	# def generate_image(self, latex):
-	# 	num = str(random.randint(0, 2 ** 31))
-	# 	latex_file = num + '.tex'
-	# 	dvi_file = num + '.dvi'
-	# 	with open(latex_file, 'w') as tex:
-	# 		latex = LATEX_FRAMEWORK.replace('__DATA__', latex)
-	# 		tex.write(latex)
-	# 		tex.flush()
-	# 		tex.close()
-	# 	os.system('latex -quiet ' + latex_file)
-	# 	os.system('dvipng -q* -D 300 -T tight ' + dvi_file)
-	# 	png_file = num + '1.png'
-	# 	return png_file
+	def generate_image(self, latex):
+		num = str(random.randint(0, 2 ** 31))
+		latex_file = num + '.tex'
+		dvi_file = num + '.dvi'
+		with open(latex_file, 'w') as tex:
+			latex = LATEX_FRAMEWORK.replace('__DATA__', latex)
+			tex.write(latex)
+			tex.flush()
+			tex.close()
+		os.system('latex -quiet ' + latex_file)
+		os.system('dvipng -q* -D 300 -T tight ' + dvi_file)
+		png_file = num + '1.png'
+		return png_file
 
 	# More unpredictable, but probably safer for my computer.
 	def generate_image_online(self, latex):
@@ -131,7 +131,7 @@ class LatexBot(discord.Client):
 		url += urllib.parse.quote(latex, safe='')
 		fn = str(random.randint(0, 2 ** 31)) + '.png'
 		urllib.request.urlretrieve(url, fn)
-		return fn 
+		return fn
 
 if __name__ == "__main__":
 	LatexBot()
