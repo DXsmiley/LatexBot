@@ -18,6 +18,7 @@
 	},
 	"latex": {
 		"background-colour": "36393E",
-		"text-colour": "DBDBDB"
+		"text-colour": "DBDBDB",
+		"dpi": "200"
 	}
 }
