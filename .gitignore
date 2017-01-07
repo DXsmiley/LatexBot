@@ -9,3 +9,6 @@ settings.json
 
 # Python
 __pycache__
+
+# Remove ignore for template file
+!template.tex
