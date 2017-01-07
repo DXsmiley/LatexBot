@@ -9,6 +9,8 @@ import sys
 
 import chanrestrict
 
+LATEX_TEMPLATE="template.tex"
+
 HELP_MESSAGE = r"""
 Hello! I'm the *LaTeX* math bot!
 
@@ -30,16 +32,6 @@ Using the `\begin` or `\end` in the *LaTeX* will probably result in something fa
 
 """
 
-LATEX_FRAMEWORK = r"""
-\documentclass[varwidth=true]{standalone}
-\usepackage{amsmath}
-\begin{document}
-\begin{align*}
-__DATA__
-\end{align*}
-\end{document}
-"""
-
 class LatexBot(discord.Client):
 	#TODO: Check for bad token or login credentials using try catch
 	def __init__(self):
@@ -47,6 +39,13 @@ class LatexBot(discord.Client):
 
 		self.checkForConfig()
 		self.settings = json.loads(open('settings.json').read())
+
+		# Quick and dirty defaults of colour settings, if not already present in the settings
+		if 'latex' not in self.settings:
+			self.settings['latex'] = {
+							'background-colour': '36393E',
+							'text-colour': 'DBDBDB'
+			}
 
 		chanrestrict.setup(self.settings['channels']['whitelist'],
 					       self.settings['channels']['blacklist'])
@@ -115,11 +114,17 @@ class LatexBot(discord.Client):
 		num = str(random.randint(0, 2 ** 31))
 		latex_file = num + '.tex'
 		dvi_file = num + '.dvi'
-		with open(latex_file, 'w') as tex:
-			latex = LATEX_FRAMEWORK.replace('__DATA__', latex)
-			tex.write(latex)
-			tex.flush()
-			tex.close()
+		with open(LATEX_TEMPLATE, 'r') as textemplatefile:
+			textemplate = textemplatefile.read()
+
+			with open(latex_file, 'w') as tex:
+				backgroundcolour = self.settings['latex']['background-colour']
+				textcolour = self.settings['latex']['text-colour']
+				latex = textemplate.replace('__DATA__', latex).replace('__BACKGROUNDCOLOUR__', backgroundcolour).replace('__TEXTCOLOUR__', textcolour)
+
+				tex.write(latex)
+				tex.flush()
+				tex.close()
 		os.system('latex -quiet ' + latex_file)
 		os.system('dvipng -q* -D 300 -T tight ' + dvi_file)
 		png_file = num + '1.png'
