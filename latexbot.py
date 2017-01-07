@@ -45,7 +45,8 @@ class LatexBot(discord.Client):
 		if 'latex' not in self.settings:
 			self.settings['latex'] = {
 							'background-colour': '36393E',
-							'text-colour': 'DBDBDB'
+							'text-colour': 'DBDBDB',
+							'dpi': '200'
 			}
 
 		chanrestrict.setup(self.settings['channels']['whitelist'],
