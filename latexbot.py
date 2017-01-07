@@ -38,7 +38,7 @@ class LatexBot(discord.Client):
 	def __init__(self):
 		super().__init__()
 
-		self.checkForConfig()
+		self.check_for_config()
 		self.settings = json.loads(open('settings.json').read())
 
 		# Quick and dirty defaults of colour settings, if not already present in the settings
@@ -62,12 +62,11 @@ class LatexBot(discord.Client):
 			raise Exception('Bad config: "login_method" should set to "login" or "token"')
 
 	# Check that config exists
-	def checkForConfig(self):
+	def check_for_config(self):
 		if not os.path.isfile('settings.json'):
 			shutil.copyfile('settings_default.json', 'settings.json')
 			print('Now you can go and edit `settings.json`.')
 			print('See README.md for more information on these settings.')
-
 
 	def vprint(self, *args, **kwargs):
 		if self.settings.get('verbose', False):
