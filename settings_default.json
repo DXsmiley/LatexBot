@@ -15,5 +15,10 @@
 	"commands": {
 		"render": ["!tex "],
 		"help": ["!help", "!help tex"]
+	},
+	"latex": {
+		"background-colour": "36393E",
+		"text-colour": "DBDBDB",
+		"dpi": "200"
 	}
 }
