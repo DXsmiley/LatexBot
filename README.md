@@ -1,3 +1,5 @@
+> **This project has been halted in favour of [MathBot](https://github.com/DXsmiley/mathbot).** I will still look at and accept pull requests, however it is not under active development.
+
 # Discord LaTeX Bot
 
 This is a bot for [Discord](https://discordapp.com/) that automatically renders LaTeX formulas.
